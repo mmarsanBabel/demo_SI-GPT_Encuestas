@@ -67,9 +67,9 @@ function doLogout() {
 
 function _readEncuestaData() {
   try {
-    return JSON.parse(localStorage.getItem(LS_KEYS.encuestaData) || '{"responsable":[],"evaluado":[]}');
+    return JSON.parse(localStorage.getItem(LS_KEYS.encuestaData) || '{"responsable":[],"evaluado":[],"colaboradores":{}}');
   } catch {
-    return { responsable: [], evaluado: [] };
+    return { responsable: [], evaluado: [], colaboradores: {} };
   }
 }
 
@@ -78,7 +78,7 @@ function _writeEncuestaData(data) {
 }
 
 function showSection(which) {
-  const sections = ['responsable', 'evaluado', 'ayuda'];
+  const sections = ['responsable', 'colaboradores', 'evaluado', 'ayuda'];
   sections.forEach(s => {
     const el = document.getElementById(`sec-${s}`);
     if (el) el.style.display = (s === which) ? 'block' : 'none';
@@ -86,18 +86,22 @@ function showSection(which) {
 
   const btnResp = document.getElementById('btnResp');
   const btnEval = document.getElementById('btnEval');
+  const btnColab = document.getElementById('btnColab');
   const btnAyuda = document.getElementById('btnAyuda');
 
-  // En esta app el menú es lateral (mismo estilo que mantenimiento_habilidades)
   const active = 'submenu-item active';
   const inactive = 'submenu-item';
   if (btnResp) btnResp.className = (which === 'responsable') ? active : inactive;
   if (btnEval) btnEval.className = (which === 'evaluado') ? active : inactive;
+  if (btnColab) btnColab.className = (which === 'colaboradores') ? active : inactive;
   if (btnAyuda) btnAyuda.className = (which === 'ayuda') ? active : inactive;
 
-  // ✅ Al entrar en Responsable, renderiza el listado (si existe la función)
   if (which === 'responsable' && typeof initResponsableUI === 'function') {
     initResponsableUI();
+  }
+
+  if (which === 'colaboradores' && typeof initColaboradoresUI === 'function') {
+    initColaboradoresUI();
   }
 }
 
@@ -529,17 +533,20 @@ function applyRoleMenu(){
 
   const btnResp = document.getElementById("btnResp");
   const btnEval = document.getElementById("btnEval");
-  if (!btnResp || !btnEval) return;
+    const btnColab = document.getElementById("btnColab");
+    if (!btnResp || !btnEval || !btnColab) return;
 
   if (perfil === "RESPONSABLE") {
-    btnEval.style.display = "none";
     btnResp.style.display = "flex";
-  } else if (perfil === "EVALUADO") {
+    btnColab.style.display = "flex";
+    btnEval.style.display = "none";
     btnResp.style.display = "none";
     btnEval.style.display = "flex";
+        btnColab.style.display = "none";
   } else {
     btnResp.style.display = "flex";
     btnEval.style.display = "flex";
+        btnColab.style.display = "flex";
   }
 }
 
@@ -599,6 +606,7 @@ const DB_INFORMANTES = {
 };
 
 const LS_RESP_SELECTED = "responsableSelectedInformadoDNI";
+const LS_COLAB_SELECTED = "colaboradoresSelectedInformadoDNI";
 
 function _fullName(ap1, ap2, nombre){
   return [ap1, ap2, nombre].filter(Boolean).join(" ");
@@ -751,6 +759,451 @@ function _setVal(id, value){
   const el = document.getElementById(id);
   if (!el) return;
   el.value = (value ?? "");
+}
+
+function getInformanteSesion(){
+  const u = getUsuarioSesion();
+  return DB_INFORMANTES[u.nombre] || {
+    ap1: "Ruiz de Santolalla",
+    ap2: "Alcantara",
+    nombre: u.nombre || "Pedro Javier",
+    dni: "012345678R",
+    empleo: "CF",
+    escala: "EOF",
+    cuerpo: "CGA",
+    escalafon: "2",
+    cargo: "OFICINA TÉCNICA DE APOYO AL CICLO DE VIDA S-80",
+    destino: "6B120 003",
+    ciu: "ARCART-COTALS-OTACV"
+  };
+}
+
+function renderListadoColaboradores(){
+  const tbody = document.getElementById("colabListadoInformados");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  if (!Array.isArray(DB_INFORMADOS) || DB_INFORMADOS.length === 0) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 3;
+    td.textContent = "No hay colaboradores para mostrar.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  DB_INFORMADOS.forEach(p => {
+    const tr = document.createElement("tr");
+    tr.style.cursor = "pointer";
+    tr.onclick = () => selectColaborador(p.dni);
+
+    const tdDni = document.createElement("td");
+    tdDni.textContent = p.dni;
+
+    const tdNom = document.createElement("td");
+    tdNom.textContent = _fullName(p.ap1, p.ap2, p.nombre);
+
+    const tdBtn = document.createElement("td");
+    const b = document.createElement("button");
+    b.className = "btn-mini";
+    b.type = "button";
+    b.textContent = "Seleccionar";
+    b.onclick = (e) => { e.stopPropagation(); selectColaborador(p.dni); };
+    tdBtn.appendChild(b);
+
+    tr.appendChild(tdDni);
+    tr.appendChild(tdNom);
+    tr.appendChild(tdBtn);
+    tbody.appendChild(tr);
+  });
+}
+
+function initColaboradoresUI(){
+  const panelList = document.getElementById("colab-select-panel");
+  const panelForm = document.getElementById("colab-form-panel");
+  const tbody = document.getElementById("colabListadoInformados");
+
+  if (!tbody) return;
+
+  if (panelList) panelList.style.display = "block";
+  if (panelForm) panelForm.style.display = "none";
+
+  renderListadoColaboradores();
+}
+
+function selectColaborador(dni){
+  const p = DB_INFORMADOS.find(x => (x.dni || "").toUpperCase() === (dni || "").toUpperCase());
+  if (!p) return;
+
+  localStorage.setItem(LS_COLAB_SELECTED, p.dni);
+
+  const panelList = document.getElementById("colab-select-panel");
+  const panelForm = document.getElementById("colab-form-panel");
+  if (!panelList || !panelForm) {
+    console.error("No encuentro colab-select-panel o colab-form-panel", { panelList, panelForm });
+    alert("Error: faltan contenedores 'colab-select-panel' / 'colab-form-panel' en el HTML.");
+    return;
+  }
+
+  panelList.style.display = "none";
+  panelForm.style.display = "block";
+
+  const label = document.getElementById("colabSelectedLabel");
+  if (label) label.textContent = `${p.dni} · ${_fullName(p.ap1, p.ap2, p.nombre)}`;
+
+  _setVal("colab_inf_ap1", p.ap1);
+  _setVal("colab_inf_ap2", p.ap2);
+  _setVal("colab_inf_nom", p.nombre);
+  _setVal("colab_inf_dni", p.dni);
+  _setVal("colab_inf_empleo", p.empleo);
+  _setVal("colab_inf_escala", p.escala);
+  _setVal("colab_inf_cuerpo", p.cuerpo);
+  _setVal("colab_inf_escalafon", p.escalafon);
+  _setVal("colab_inf_cargo", p.cargo);
+  _setVal("colab_inf_destino", p.destino);
+  _setVal("colab_inf_ciu", p.ciu);
+  _setVal("colab_inf_fnac", p.fnac);
+  _setVal("colab_inf_fasc", p.fasc);
+
+  const info = getInformanteSesion();
+  _setVal("colab_eva_ap1", info.ap1);
+  _setVal("colab_eva_ap2", info.ap2);
+  _setVal("colab_eva_nom", info.nombre);
+  _setVal("colab_eva_dni", info.dni);
+  _setVal("colab_eva_empleo", info.empleo);
+  _setVal("colab_eva_escala", info.escala);
+  _setVal("colab_eva_cuerpo", info.cuerpo);
+  _setVal("colab_eva_escalafon", info.escalafon);
+  _setVal("colab_eva_cargo", info.cargo);
+  _setVal("colab_eva_destino", info.destino);
+  _setVal("colab_eva_ciu", info.ciu);
+
+  if (typeof showColabTab === "function") showColabTab("datos");
+}
+
+function colabBackToList(){
+  localStorage.removeItem(LS_COLAB_SELECTED);
+
+  const panelForm = document.getElementById("colab-form-panel");
+  const panelList = document.getElementById("colab-select-panel");
+  if (panelForm) panelForm.style.display = "none";
+  if (panelList) panelList.style.display = "block";
+
+  const label = document.getElementById("colabSelectedLabel");
+  if (label) label.textContent = "—";
+
+  if (typeof showColabTab === "function") showColabTab("datos");
+
+  [
+    "colab_inf_ap1","colab_inf_ap2","colab_inf_nom","colab_inf_dni","colab_inf_empleo","colab_inf_escala",
+    "colab_inf_cuerpo","colab_inf_escalafon","colab_inf_cargo","colab_inf_destino","colab_inf_ciu",
+    "colab_inf_fnac","colab_inf_fasc","colab_cod_puesto","colab_eva_ap1","colab_eva_ap2","colab_eva_nom",
+    "colab_eva_dni","colab_eva_empleo","colab_eva_escala","colab_eva_cuerpo","colab_eva_escalafon",
+    "colab_eva_cargo","colab_eva_destino","colab_eva_ciu"
+  ].forEach(id => _setVal(id, ""));
+}
+
+function showColabTab(tabName) {
+  const tabs = [
+    { id: 'datos', panel: 'colab-tab-datos', btn: 'tabColabDatos' },
+    { id: 'encuesta', panel: 'colab-tab-encuesta', btn: 'tabColabEncuesta' }
+  ];
+
+  tabs.forEach(tab => {
+    const panelEl = document.getElementById(tab.panel);
+    const btnEl = document.getElementById(tab.btn);
+
+    if (tab.id === tabName) {
+      if (panelEl) panelEl.style.display = 'block';
+      if (btnEl) {
+        btnEl.classList.add('active');
+        btnEl.style.backgroundColor = '#00447b';
+        btnEl.style.color = '#ffffff';
+        btnEl.style.fontWeight = 'bold';
+        btnEl.style.fontSize = '1.05rem';
+        btnEl.style.borderBottom = '3px solid #ffcc00';
+      }
+    } else {
+      if (panelEl) panelEl.style.display = 'none';
+      if (btnEl) {
+        btnEl.classList.remove('active');
+        btnEl.style.backgroundColor = '#f1f1f1';
+        btnEl.style.color = '#555';
+        btnEl.style.fontWeight = 'normal';
+        btnEl.style.fontSize = '1.0rem';
+        btnEl.style.borderBottom = 'none';
+      }
+    }
+  });
+}
+
+let contadorFortalezasColab = 0;
+
+function agregarFortalezaColab() {
+    contadorFortalezasColab++;
+    const contenedor = document.getElementById('contenedor-fortalezas-colab');
+    
+    const div = document.createElement('div');
+    div.className = 'eval-block'; 
+    div.style.marginTop = "15px";
+    div.style.borderLeft = "4px solid #00447b"; 
+    
+    div.innerHTML = `
+        <div style="margin-bottom: 5px;">
+            <label style="font-weight: bold;">Competencia de fortaleza del jefe directo:</label>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <select id="colab_fortaleza_tipo_${contadorFortalezasColab}" 
+                style="width: 70%; height: 38px; padding: 0 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;"
+                onchange="document.getElementById('colab_fortaleza_area_wrapper_${contadorFortalezasColab}').style.display = (this.value === 'CEX - Conocimiento Experto') ? 'block' : 'none';">
+                <option value="">-- Seleccione competencia --</option>
+                <optgroup label="Actuación con valores">
+                    <option value="INE - Integridad y Ejemplaridad">INE Integridad y Ejemplaridad</option>
+                    <option value="CCM Compromiso con la Misión">CCM Compromiso con la Misión</option>
+                </optgroup>
+                <optgroup label="Liderazgo y mando">
+                    <option value="LID - Liderazgo de Equipos">LID Liderazgo de Equipos</option>
+                    <option value="MEN Mentoria">MEN Mentoria</option>
+                    <option value="HUM Humanidad">HUM Humanidad</option>
+                </optgroup>
+                <optgroup label="Capacidades de análisis y gestión">
+                    <option value="CAD - Capacidad de Decisión">CAD Capacidad de Decisión</option>
+                    <option value="COM - Comunicación">COM Comunicación</option>
+                    <option value="VES - Visión Estratégica">VES Visión Estratégica</option>
+                    <option value="ORC - Organización y Coordinación">ORC Organización y Coordinación</option>
+                    <option value="POB - Planificación de Objetivos">POB Planificación de Objetivos</option>
+                    <option value="INC - Iniciativa y Creatividad">INC Iniciativa y Creatividad</option>
+                </optgroup>
+                <optgroup label="Capacidades técnicas">
+                    <option value="CEX - Conocimiento Experto">CEX Conocimiento Experto</option>
+                    <option value="REE Rigor en la Ejecución">REE Rigor en la Ejecución</option>
+                </optgroup>
+            </select>
+            
+            <button type="button" class="btn-mini" 
+                style="height: 38px; background:#fee2e2; color:#991b1b; border: 1px solid #f87171; padding: 0 15px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; justify-content: center;" 
+                onclick="this.closest('.eval-block').remove()">
+                Eliminar
+            </button>
+        </div>
+
+        <div id="colab_fortaleza_area_wrapper_${contadorFortalezasColab}" style="display: none; margin-bottom: 15px;">
+            <div style="margin-bottom: 5px;">
+                <label style="font-weight: bold;">Área de experiencia específica:</label>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                <select id="colab_fortaleza_area_${contadorFortalezasColab}" 
+                    style="width: 70%; height: 38px; padding: 0 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="">-- Seleccione área de experiencia --</option>
+                    <option value="OPE - Operaciones">OPE - Operaciones</option>
+                    <option value="INT - Inteligencia y Seguridad">INT - Inteligencia y Seguridad</option>
+                    <option value="LOG - Logística">LOG - Logística</option>
+                    <option value="PER - Personal">PER - Personal</option>
+                    <option value="CIS - Sistemas de Información">CIS - Sistemas de Información</option>
+                </select>
+            </div>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <div style="margin-bottom: 5px; font-weight: bold;">
+                Justifique con ejemplos <span style="color: red;">*</span>
+            </div>
+            <textarea id="colab_fortaleza_obs_${contadorFortalezasColab}" class="required-msg" rows="3" 
+                style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;"
+                placeholder="Proporcione ejemplos concretos que justifiquen esta fortaleza..."></textarea>
+        </div>
+    `;
+    
+    contenedor.appendChild(div);
+}
+
+let contadorDebilidadesColab = 0;
+
+function agregarDebilidadColab() {
+    contadorDebilidadesColab++;
+    const contenedor = document.getElementById('contenedor-debilidades-colab');
+    
+    if (!contenedor) return; 
+
+    const div = document.createElement('div');
+    div.className = 'eval-block'; 
+    div.style.marginTop = "20px";
+    div.style.padding = "15px";
+    div.style.backgroundColor = "#f9fafb";
+    div.style.borderLeft = "4px solid #708ea0"; 
+    div.style.borderRadius = "0 4px 4px 0";
+    
+    div.innerHTML = `
+        <div style="margin-bottom: 10px;">
+            <label style="font-weight: bold; color: #00447b;">Competencia a mejorar del jefe directo:</label>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <select id="colab_mejora_tipo_${contadorDebilidadesColab}" 
+                style="width: 70%; height: 40px; padding: 0 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 0.9rem;"
+                onchange="document.getElementById('colab_mejora_area_wrapper_${contadorDebilidadesColab}').style.display = (this.value === 'CEX - Conocimiento Experto') ? 'block' : 'none';">
+                <option value="">-- Seleccione competencia --</option>
+                <optgroup label="Actuación con valores">
+                    <option value="INE - Integridad y Ejemplaridad">INE Integridad y Ejemplaridad</option>
+                    <option value="CCM Compromiso con la Misión">CCM Compromiso con la Misión</option>
+                </optgroup>
+                <optgroup label="Liderazgo y mando">
+                    <option value="LID - Liderazgo de Equipos">LID Liderazgo de Equipos</option>
+                    <option value="MEN Mentoria">MEN Mentoria</option>
+                    <option value="HUM Humanidad">HUM Humanidad</option>
+                </optgroup>
+                <optgroup label="Capacidades de análisis y gestión">
+                    <option value="CAD - Capacidad de Decisión">CAD Capacidad de Decisión</option>
+                    <option value="COM - Comunicación">COM Comunicación</option>
+                    <option value="VES - Visión Estratégica">VES Visión Estratégica</option>
+                    <option value="ORC - Organización y Coordinación">ORC Organización y Coordinación</option>
+                    <option value="POB - Planificación de Objetivos">POB Planificación de Objetivos</option>
+                    <option value="INC - Iniciativa y Creatividad">INC Iniciativa y Creatividad</option>
+                </optgroup>
+                <optgroup label="Capacidades técnicas">
+                    <option value="CEX - Conocimiento Experto">CEX Conocimiento Experto</option>
+                    <option value="REE Rigor en la Ejecución">REE Rigor en la Ejecución</option>
+                </optgroup>
+            </select>
+
+            <button type="button" class="btn-mini" 
+                style="height: 38px; background:#fee2e2; color:#991b1b; border: 1px solid #f87171; padding: 0 15px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; justify-content: center;" 
+                onclick="this.closest('.eval-block').remove()">
+                Eliminar
+            </button>
+        </div>
+
+        <div id="colab_mejora_area_wrapper_${contadorDebilidadesColab}" style="display: none; margin-bottom: 15px;">
+            <div style="margin-bottom: 5px;">
+                <label style="font-weight: bold; color: #00447b;">Área de experiencia específica:</label>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                <select id="colab_mejora_area_${contadorDebilidadesColab}" 
+                    style="width: 70%; height: 38px; padding: 0 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                    <option value="">-- Seleccione área de experiencia --</option>
+                    <option value="OPE - Operaciones">OPE - Operaciones</option>
+                    <option value="INT - Inteligencia y Seguridad">INT - Inteligencia y Seguridad</option>
+                    <option value="LOG - Logística">LOG - Logística</option>
+                    <option value="PER - Personal">PER - Personal</option>
+                    <option value="CIS - Sistemas de Información">CIS - Sistemas de Información</option>
+                </select>
+            </div>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <div style="margin-bottom: 5px; font-weight: 500;">
+                Justifique la mejora <span style="color:red;">*</span>
+            </div>
+            <textarea id="colab_mejora_obs_${contadorDebilidadesColab}" class="required-msg" rows="3" 
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; box-sizing: border-box; display: block;"
+                placeholder="Proporcione ejemplos concretos que justifiquen esta área de mejora..."></textarea>
+        </div>
+    `;
+    
+    contenedor.appendChild(div);
+}
+
+function guardarEncuestaColaborador(tipo) {
+    console.log("Iniciando validación para:", tipo);
+
+    try {
+        // 1. Validar fortalezas (OPCIONAL, pero si hay debe tener texto)
+        const contCompetencia = document.getElementById('contenedor-fortalezas-colab');
+        const bloquesCompetencia = contCompetencia ? contCompetencia.querySelectorAll('.eval-block') : [];
+
+        for (const bloque of bloquesCompetencia) {
+            const select = bloque.querySelector('select');
+            const textarea = bloque.querySelector('textarea');
+            
+            if (!select || select.value === "") {
+                mostrarAlerta("Seleccione el tipo de Fortaleza.", "Validación");
+                if (select) select.focus(); 
+                return;
+            }
+            
+            if (!textarea || textarea.value.trim() === "") {
+                mostrarAlerta("Justifique la fortaleza con ejemplos.", "Validación");
+                if (textarea) textarea.focus(); 
+                return;
+            }
+        }
+
+        // 2. Validar mejoras (OPCIONAL, pero si hay debe tener texto)
+        const contMejora = document.getElementById('contenedor-debilidades-colab');
+        const bloquesMejora = contMejora ? contMejora.querySelectorAll('.eval-block') : [];
+
+        for (const bloque of bloquesMejora) {
+            const select = bloque.querySelector('select');
+            const textarea = bloque.querySelector('textarea');
+            
+            if (!select || select.value === "") {
+                mostrarAlerta("Seleccione el tipo de Mejora.", "Validación");
+                if (select) select.focus(); 
+                return;
+            }
+            
+            if (!textarea || textarea.value.trim() === "") {
+                mostrarAlerta("Justifique el área de mejora con ejemplos.", "Validación");
+                if (textarea) textarea.focus(); 
+                return;
+            }
+        }
+
+        // 3. Validar radio buttons (OBLIGATORIOS)
+        const radioPotencial = document.querySelector('input[name="colab_potencial_superior"]:checked');
+        if (!radioPotencial) {
+            mostrarAlerta("Pregunta 1.3: Seleccione el potencial para responsabilidades superiores.", "Validación");
+            return;
+        }
+
+        const radioDestino = document.querySelector('input[name="colab_deseo_destino"]:checked');
+        if (!radioDestino) {
+            mostrarAlerta("Pregunta 1.4: Seleccione si desearía volver bajo su mando.", "Validación");
+            return;
+        }
+
+        const radioCombate = document.querySelector('input[name="colab_combate"]:checked');
+        if (!radioCombate) {
+            mostrarAlerta("Pregunta 1.5: Seleccione su respuesta sobre combate.", "Validación");
+            return;
+        }
+
+        // --- GUARDAR ---
+        const data = _readEncuestaData();
+        data.colaboradores = {
+            fortalezas: Array.from(bloquesCompetencia).map(b => ({
+                tipo: b.querySelector('select').options[b.querySelector('select').selectedIndex].text,
+                obs: b.querySelector('textarea').value
+            })),
+            mejoras: Array.from(bloquesMejora).map(b => ({
+                tipo: b.querySelector('select').options[b.querySelector('select').selectedIndex].text,
+                obs: b.querySelector('textarea').value
+            })),
+            potencial_superior: radioPotencial.value,
+            deseo_destino: radioDestino.value,
+            combate: radioCombate.value,
+            fecha: new Date().toLocaleString()
+        };
+
+        localStorage.setItem(LS_KEYS.encuestaData, JSON.stringify(data));
+
+        setTimeout(() => {
+            if (confirm("¡Encuesta guardada correctamente!\n\n¿Desea CERRAR SESIÓN ahora?")) {
+                doLogout();
+            } else {
+                mostrarAlerta("Datos guardados. Puede seguir en la página.", "Éxito");
+            }
+        }, 200);
+
+    } catch (error) {
+        console.error("Error:", error);
+        mostrarAlerta("Error técnico al guardar: " + error.message, "Error");
+    }
 }
 
 // Tabs responsable (mantén si ya la tenías; si existe, no la dupliques)
