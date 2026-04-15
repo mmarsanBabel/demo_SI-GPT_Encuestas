@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Encuesta de Competencias</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <div class="logo-container">
+      <img src="logo1.png" alt="Logo 1" class="header-logo">
+    </div>
+
+    <div class="header-title-center">
+      <h1>Encuesta de Competencias</h1>
+      <div class="sub">Encuesta de Competencias</div>
+    </div>
+	
+
+	<div class="logo-container logo-right">
+	  <img src="logo2.png" alt="Logo 2" class="header-logo">
+	</div>
+  </div>
+
+  <div class="user-data">
+    <div id="userLine">Usuario: —</div>
+
+    <div class="user-actions">
+      <button class="btn-mini" onclick="exportJSON()">Export JSON</button>
+
+      <label class="btn-mini">
+        Import JSON
+        <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importJSON(event)" />
+      </label>
+
+      <button class="btn-mini" onclick="factoryReset()">Reset</button>
+      <button class="btn-mini" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </div>
+</header>
+
+  <div class="wrapper">
+    <!-- Menú lateral (mismo estilo que mantenimiento_habilidades.html) -->
+    <nav class="nav">
+      <div class="nav-section">
+        <!-- <div class="nav-title">Menú</div>-->
+		<div class="nav-root" style="margin-top:20px;">ENCUESTAS</div>
+        <div id="btnResp" class="submenu-item active" onclick="showSection('responsable')">Encuesta Responsable</div>
+        <div id="btnEval" class="submenu-item" onclick="showSection('evaluado')">Encuesta Evaluado</div>
+        <!-- Se deja Ayuda disponible, pero en el menú solo se muestran las 2 opciones pedidas -->
+        <div id="btnAyuda" class="submenu-item" style="display:none" onclick="showSection('ayuda')">Ayuda</div>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 style="margin:0;">Encuesta</h2>
+          </div>
+        </div>
+
+      <!-- Responsable -->
+		<section id="sec-responsable" style="padding: 16px;">
+
+		  <!-- 1) PANTALLA: Selección de Informado -->
+		  <div id="resp-select-panel">
+			<div class="hint" style="margin-bottom:10px;">
+			  Selecciona el <b>Informado</b> para realizar su encuesta de competencias.
+			</div>
+
+			<div class="table-wrap">
+			  <table class="simple-table">
+				<thead>
+				  <tr>
+					<th>DNI</th>
+					<th>Nombre completo</th>
+					<th style="width:140px;"></th>
+				  </tr>
+				</thead>
+				<tbody id="respListadoInformados">
+				  <!-- Se rellena por JS -->
+				</tbody>
+			  </table>
+			</div>
+		  </div>
+
+		  <!-- 2) PANTALLA: Tabs + formulario (oculta hasta seleccionar informado) -->
+		  <div id="resp-form-panel" style="display:none;">
+
+			<div class="resp-topbar" style="background: #f0f4f8; padding: 15px 25px; border-radius: 8px; border-left: 5px solid #00447b; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box;">
+				
+				<div style="color: #333; display: flex; align-items: center;">
+					<span style="font-weight: 500; color: #666; font-size: 1.2rem;">Informado:</span> 
+					<b id="respSelectedLabel" style="font-size: 1.4rem; color: #00447b; margin-left: 10px; white-space: nowrap;">—</b>
+				</div>
+				
+				<div>
+					<button class="btn-mini" type="button" onclick="respBackToList()" 
+							style="background-color: #00447b; color: white; padding: 12px 24px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center;">
+						<span style="margin-right: 8px;">←</span> Volver al listado
+					</button>
+				</div>
+			</div>
+
+			<div class="tabs">
+			  <button id="tabRespDatos" class="tab-btn active" type="button" onclick="showRespTab('datos')">
+				Datos Administrativos
+			  </button>
+			  <button id="tabRespComp" class="tab-btn" type="button" onclick="showRespTab('competencias')">
+				SECCION 1: Análisis de competencias
+			  </button>
+			<button id="tabRespTray" class="tab-btn" type="button" onclick="showRespTab('trayectoria')">
+				SECCION 2: Trayectoria profesional potencial
+			</button>
+			</div>
+
+			<!-- TAB 1: DATOS ADMINISTRATIVOS -->
+			<div id="resp-tab-datos" class="tab-panel">
+			
+				<div style="margin-bottom: 25px;">
+					<h2 style="color: #00447b; border-bottom: 2px solid #00447b; padding-bottom: 8px; font-size: 1.4rem;">
+						Datos Administrativos
+					</h2>
+					<p style="font-size: 1rem; color: #333; line-height: 1.5; margin-top: 15px;">
+						En esta sección el informante solo deberá comprobar sus datos
+					</p>
+					<p style="color: #d32f2f; font-weight: bold; margin-top: 10px;">
+						[Todos los de este apartado de datos administrativos se han rellenado automáticamente]
+					</p>
+				</div>
+			  <div class="admin-2col">
+				<div class="admin-card">
+				  <div class="admin-card-title">Datos del Informado</div>
+
+				  <div class="admin-fields">
+					<div class="field-group"><label>Primer Apellido</label><input id="inf_ap1" type="text" readonly></div>
+					<div class="field-group"><label>Segundo Apellido</label><input id="inf_ap2" type="text" readonly></div>
+
+					<div class="field-group"><label>Nombre</label><input id="inf_nom" type="text" readonly></div>
+					<div class="field-group"><label>DNI</label><input id="inf_dni" type="text" readonly></div>
+
+					<div class="field-group"><label>Empleo</label><input id="inf_empleo" type="text" readonly></div>
+					<div class="field-group"><label>Escala</label><input id="inf_escala" type="text" readonly></div>
+
+					<div class="field-group"><label>Cuerpo</label><input id="inf_cuerpo" type="text" readonly></div>
+					<div class="field-group"><label>Número Escalafón</label><input id="inf_escalafon" type="text" readonly></div>
+
+					<div class="field-group"><label>Cargo</label><input id="inf_cargo" type="text" readonly></div>
+					<div class="field-group"><label>Destino</label><input id="inf_destino" type="text" readonly></div>
+
+					<div class="field-group"><label>Código Unidad (CIU)</label><input id="inf_ciu" type="text" readonly></div>
+					
+					<div class="field-group"><label>Fecha de Nacimiento</label><input id="inf_fnac" type="text" readonly placeholder="DD-MM-YYYY"></div>
+					<div class="field-group"><label>Fecha de Ascenso</label><input id="inf_fasc" type="text" readonly placeholder="DD-MM-YYYY"></div>
+
+					<div class="field-group"><label>Código de Puesto</label><input id="r_cod_puesto" type="text" readonly /></div>
+				  </div>
+				</div>
+
+				<div class="admin-card">
+				  <div class="admin-card-title">Datos del Informante</div>
+
+				  <div class="admin-fields">
+					<div class="field-group"><label>Primer Apellido</label><input id="eva_ap1" type="text" disabled></div>
+					<div class="field-group"><label>Segundo Apellido</label><input id="eva_ap2" type="text" disabled></div>
+					<div class="field-group"><label>Nombre</label><input id="eva_nom" type="text" disabled></div>
+					<div class="field-group"><label>DNI</label><input id="eva_dni" type="text" disabled></div>
+					<div class="field-group"><label>Empleo</label><input id="eva_empleo" type="text" disabled></div>
+					<div class="field-group"><label>Escala</label><input id="eva_escala" type="text" disabled></div>
+					<div class="field-group"><label>Cuerpo</label><input id="eva_cuerpo" type="text" disabled></div>
+					<div class="field-group"><label>Número Escalafón</label><input id="eva_escalafon" type="text" disabled></div>
+					<div class="field-group"><label>Cargo</label><input id="eva_cargo" type="text" disabled></div>
+					<div class="field-group"><label>Destino</label><input id="eva_destino" type="text" disabled></div>
+					<div class="field-group"><label>Código Unidad (CIU)</label><input id="eva_ciu" type="text" disabled></div>
+				  </div>
+				</div>
+			  </div>
+
+		  </div>
+
+			<!-- TAB 2: COMPETENCIAS -->
+
+			<div id="resp-tab-competencias" class="tab-panel" style="display:none;">
+			
+			<div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+				<button class="btn-mini" type="button" onclick="guardarEncuestaResponsable('responsable')" 
+						style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
+					Finalizar y Guardar Encuesta
+				</button>
+			</div>
+			
+				<div style="margin-bottom: 25px;">
+					<h2 style="color: #00447b; border-bottom: 2px solid #00447b; padding-bottom: 8px; font-size: 1.4rem;">
+						Sección 1 – Análisis de competencias
+					</h2>
+					<p style="font-size: 1rem; color: #333; line-height: 1.5; margin-top: 15px;">
+						En esta sección, se analizan las fortalezas y áreas de desarrollo competencial del individuo, usando el Modelo de Competencias de la Armada como base
+					</p>
+					<p style="color: #d32f2f; font-weight: bold; margin-top: 10px;">
+						[Todos los campos libres de esta sección marcados con * son de obligatoria cumplimentación]
+					</p>
+				</div>
+				
+			<div style="margin-top: 30px; padding: 20px; border: 2px dashed #00447b; background: #f0f7ff; border-radius: 8px;">
+			<h3 style="margin-bottom:12px; color: #00447b;">1.1 Valore el desarrollo del individuo en cada una de las cuatro áreas de impacto del Modelo de Competencias, justificando su respuesta cuando se requiera:
+			</h3>
+				
+			<div class="eval-block" style="margin-top: 25px;">
+				<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+					Actuación con valores
+				</div>
+				
+				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+						<input type="radio" name="r_valores" value="1" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+						<input type="radio" name="r_valores" value="2" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+						<input type="radio" name="r_valores" value="3" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+						<input type="radio" name="r_valores" value="4" style="transform: scale(1.3);">
+					</label>
+				</div>
+				
+					<div class="justification-box">
+						<div class="justification-label">
+							Justifique su respuesta <span class="required-star">*</span>
+						</div>
+						<textarea id="r_valores_obs" class="required-msg" rows="3" 
+							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
+					</div>
+				</div>
+
+				
+				<div class="eval-block" style="margin-top: 25px;">
+					<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+						Liderazgo y mando
+					</div>
+					
+				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+						<input type="radio" name="r_liderazgo" value="1" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+						<input type="radio" name="r_liderazgo" value="2" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+						<input type="radio" name="r_liderazgo" value="3" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+						<input type="radio" name="r_liderazgo" value="4" style="transform: scale(1.3);">
+					</label>
+				</div>
+
+					<div class="justification-box" style="margin-top: 15px;">
+						<div class="justification-label">
+							Justifique su respuesta <span class="required-star">*</span>
+						</div>
+						<textarea id="r_liderazgo_obs" class="required-msg" rows="3" 
+							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
+					</div>
+				</div>
+				
+				<div class="eval-block" style="margin-top: 25px;">
+					<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+						Capacidades de análisis y gestión
+					</div>
+					
+				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+						<input type="radio" name="r_analisis" value="1" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+						<input type="radio" name="r_analisis" value="2" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+						<input type="radio" name="r_analisis" value="3" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+						<input type="radio" name="r_analisis" value="4" style="transform: scale(1.3);">
+					</label>
+				</div>
+					<div class="justification-box" style="margin-top: 15px;">
+						<div class="justification-label">
+							Justifique su respuesta <span class="required-star">*</span>
+						</div>
+						<textarea id="r_analisis_obs" class="required-msg" rows="3" 
+							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
+					</div>
+				</div>
+				
+				<div class="eval-block" style="margin-top: 25px;">
+					<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+						Capacidades técnicas
+					</div>
+					
+					<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+						
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+							<input type="radio" name="r_tecnicas" value="1" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+							<input type="radio" name="r_tecnicas" value="2" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+							<input type="radio" name="r_tecnicas" value="3" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+							<input type="radio" name="r_tecnicas" value="4" style="transform: scale(1.3);">
+						</label>
+					</div>
+					<div class="justification-box" style="margin-top: 15px;">
+						<div class="justification-label">
+							Justifique su respuesta <span class="required-star">*</span>
+						</div>
+						<textarea id="r_tecnicas_obs" class="required-msg" rows="4" 
+							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I), la Guía para Elaboración del Informe (Anexo II) y la Guía específica sobre el Área de Impacto de Capacidades Técnicas (Anexo III). En esta última, se detallan las habilidades técnicas que integran la competencia “Saber Experto”, referencia para la argumentación"></textarea>
+					</div>
+				</div>
+</div>
+
+			<div style="margin-top: 30px; padding: 20px; border: 2px dashed #00447b; background: #f0f7ff; border-radius: 8px;">
+					<h3 style="margin-bottom:12px; color: #00447b;">1.2 De acuerdo con el Modelo de Competencias de la Armada, si lo considera, seleccione las competencias donde el individuo demuestra una fortaleza clara vs sus pares, y justifíquelas con ejemplos concretos:
+					</h3>
+
+				<p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+					Haga clic en el botón inferior para añadir una nueva competencia de fortaleza.
+				</p>
+
+				<div id="contenedor-fortalezas" style="margin-bottom: 15px;"></div>
+
+				<button type="button" 
+						id="btn-agregar-fortaleza"
+						class="btn-mini" 
+						onclick="agregarFortaleza()" 
+						style="cursor:pointer; background-color: #00447b; color: white; padding: 10px 15px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 1.5rem; line-height: 0;">+</span> Añadir competencia
+				</button>
+				
+				<div style="margin-top: 30px; border: 1px solid #000; padding: 15px;">
+					<label style="display: block; font-weight: bold; text-align: center; margin-bottom: 10px; font-style: italic;">
+						Texto libre: Competencias y habilidades adicionales no incluidas en el Modelo de Competencias de la Armada
+					</label>
+					<p style="font-style: italic; font-size: 0.95rem; color: #333; margin-bottom: 10px; text-align: center;">
+						Puede mencionar aquí, si lo desea, de alguna otra habilidad que tenga el individuo, que no esté contemplada específicamente en el Modelo de Competencias de la Armada y que considera que puede ser valiosa para la organización.
+					</p>
+					<textarea id="r_habilidades_adicionales" rows="4" style="width: 100%; border: 1px solid #000; padding: 10px;" placeholder="Escriba aquí..."></textarea>
+				</div>
+			</div>
+			
+			<div style="margin-top: 30px; padding: 20px; border: 2px dashed #00447b; background: #f0f7ff; border-radius: 8px;">
+				<h3 style="margin-bottom:12px; color: #00447b; font-size: 1.1rem;">
+					1.3 De acuerdo con el Modelo de Competencias de la Armada, si lo considera, 
+					seleccione las competencias donde el individuo demuestra una debilidad / área de desarrollo clara 
+					vs sus pares, y justifíquelas con ejemplos concretos:
+				</h3>
+				<div id="contenedor-debilidades"></div>
+				
+				<button type="button" 
+						id="btn-agregar-fortaleza"
+						class="btn-mini" 
+						onclick="agregarFila('debilidades')" 
+						style="cursor:pointer; background-color: #00447b; color: white; padding: 10px 15px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 1.5rem; line-height: 0;">+</span> Añadir competencia
+				</button>
+	
+			<div style="margin-top: 30px; border: 1px solid #000; padding: 15px;">
+				<label style="display: block; font-weight: bold; text-align: center; margin-bottom: 10px; font-style: italic;">
+					Texto libre: Competencias y habilidades adicionales no incluidas en el Modelo de Competencias de la Armada
+				</label>
+				<p style="font-style: italic; font-size: 0.95rem; color: #333; margin-bottom: 10px; text-align: center;">
+						Puede mencionar aquí, si lo desea, de alguna otra debilidad que tenga el individuo, que no esté contemplada específicamente en el Modelo de Competencias de la Armada y que considera que puede ser valiosa para la organización.
+				</p>
+				<textarea id="r_habilidades_adicionales" rows="4" style="width: 100%; border: 1px solid #000; padding: 10px;" placeholder="Escriba aquí..."></textarea>
+			</div>
+			
+			</div>
+
+			<div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+				<button class="btn-mini" type="button" onclick="guardarEncuestaResponsable('responsable')" 
+						style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
+					Finalizar y Guardar Encuesta
+				</button>
+			</div>
+					
+			</div>
+
+			<!-- TAB 3: Trayectoria profesional potencial -->			
+
+			<div id="resp-tab-trayectoria" class="tab-panel" style="display:none;">
+
+			<div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+				<button class="btn-mini" type="button" onclick="guardarEncuestaResponsable('responsable')" 
+						style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
+					Finalizar y Guardar Encuesta
+				</button>
+			</div>
+    
+				<div style="margin-bottom: 25px;">
+					<h2 style="color: #00447b; border-bottom: 2px solid #00447b; padding-bottom: 8px; font-size: 1.4rem;">
+						Sección 2 – Trayectoria profesional potencial
+					</h2>
+					<p style="font-size: 1rem; color: #333; line-height: 1.5; margin-top: 15px;">
+						En esta sección se incluyen preguntas respectivas a la trayectoria profesional futura del individuo. 
+						Conteste las preguntas considerando las fortalezas y áreas de desarrollo competenciales identificadas en la sección anterior.
+					</p>
+					<p style="color: #d32f2f; font-weight: bold; margin-top: 10px;">
+						[Todos los campos de texto libre de esta sección son de obligatoria cumplimentación]
+					</p>
+				</div>
+			<div style="margin-top: 30px; padding: 20px; border: 2px dashed #00447b; background: #f0f7ff; border-radius: 8px;">
+
+				<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+					<h3 style="margin-bottom:20px; color: #00447b; font-size: 1.1rem;">
+						2.1 Si pudiera elegir, ¿desearía contar con el individuo en su unidad a futuro?
+					</h3>
+			
+				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">No, lo evitaría proactivamente</span>
+						<input type="radio" name="r_deseo_unidad" value="1" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">No me gustaría</span>
+						<input type="radio" name="r_deseo_unidad" value="2" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #fbc02d; padding: 10px; cursor: pointer; background-color: #fffde7; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Me es indiferente</span>
+						<input type="radio" name="r_deseo_unidad" value="3" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sí me gustaría</span>
+						<input type="radio" name="r_deseo_unidad" value="4" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sí, lo buscaría proactivamente</span>
+						<input type="radio" name="r_deseo_unidad" value="5" style="transform: scale(1.3);">
+					</label>
+				</div>
+
+				<div class="justification-box">
+					<div class="justification-label" style="margin-bottom: 8px; font-weight: bold; color: #333;">
+						Justifique su respuesta <span class="required-star" style="color: red;">*</span>
+					</div>
+					<div class="justification-box" style="margin-top: 20px;">
+						<textarea id="r_deseo_unidad_obs" class="required-msg" rows="4" 
+						style="width: 100%; border: 1px solid #000; padding: 12px; font-family: inherit;"
+							placeholder="Justifique su respuesta. Use el Modelo de Competencias como base"></textarea>
+					</div>
+				</div>
+				
+			</div>
+
+			
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+				<h3 style="margin-bottom:20px; color: #00447b; font-size: 1.1rem; font-weight: bold;">
+					2.2 En relación con el personal en su mismo empleo, ¿cree que el individuo tiene el potencial para desempeñar el siguiente empleo?
+				</h3>
+				
+				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">No</span>
+						<input type="radio" name="r_potencial_empleo" value="1" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+						<input type="radio" name="r_potencial_empleo" value="2" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+						<input type="radio" name="r_potencial_empleo" value="3" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+						<input type="radio" name="r_potencial_empleo" value="4" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+						<input type="radio" name="r_potencial_empleo" value="5" style="transform: scale(1.3);">
+					</label>
+				</div>
+
+				<div class="justification-box">
+					<div class="justification-label" style="margin-bottom: 8px; font-weight: bold; color: #333;">
+						Justifique su respuesta <span class="required-star" style="color: red;">*</span>
+					</div>
+					<textarea id="r_potencial_empleo_obs" class="required-msg" rows="4" 
+						style="width: 100%; border: 1px solid #000; padding: 12px; font-family: inherit;"
+						placeholder="Justifique su respuesta basándose en el potencial observado comparado con sus pares"></textarea>
+				</div>
+			</div>
+			
+			
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+				<h3 style="margin-bottom:20px; color: #00447b; font-size: 1.1rem; font-weight: bold;">
+					2.3 Considerando sus competencias, ¿cree que el individuo tiene potencial para desempeñar puestos de especial responsabilidad en el mismo o en el siguiente empleo? (p. ej., mando, DER, 2º Comandante, Jefatura de Sección...)
+				</h3>
+				
+				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">No</span>
+						<input type="radio" name="r_potencial_especial" value="1" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+						<input type="radio" name="r_potencial_especial" value="2" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+						<input type="radio" name="r_potencial_especial" value="3" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+						<input type="radio" name="r_potencial_especial" value="4" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+						<input type="radio" name="r_potencial_especial" value="5" style="transform: scale(1.3);">
+					</label>
+				</div>
+
+				<div class="justification-box">
+					<div class="justification-label" style="margin-bottom: 8px; font-weight: bold; color: #333;">
+						Justifique su respuesta <span class="required-star" style="color: red;">*</span>
+					</div>
+					<textarea id="r_potencial_especial_obs" class="required-msg" rows="4" 
+						style="width: 100%; border: 1px solid #000; padding: 12px; font-family: inherit;"
+						placeholder="Justifique su respuesta basándose en la idoneidad para cargos de responsabilidad"></textarea>
+				</div>
+			</div>
+			
+			
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+				<h3 style="margin-bottom:20px; color: #00447b; font-size: 1.1rem; font-weight: bold;">
+					2.4 ¿Ve al individuo motivado para seguir progresando en su trayectoria profesional?
+				</h3>
+				
+				<div class="eval-options" style="display: flex; justify-content: flex-start; gap: 20px; margin-bottom: 25px;">
+					
+					<label class="opt-item" style="width: 150px; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">No</span>
+						<input type="radio" name="r_motivacion_progreso" value="1" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="width: 150px; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sí</span>
+						<input type="radio" name="r_motivacion_progreso" value="2" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="width: 150px; text-align: center; border: 2px solid #fbc02d; padding: 10px; cursor: pointer; background-color: #fffde7; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">No estoy seguro</span>
+						<input type="radio" name="r_motivacion_progreso" value="3" style="transform: scale(1.3);">
+					</label>
+				</div>
+
+				<div class="justification-box">
+					<div class="justification-label" style="margin-bottom: 8px; font-weight: bold; color: #333;">
+						Justifique su respuesta <span class="required-star" style="color: red;">*</span>
+					</div>
+					<textarea id="r_motivacion_progreso_obs" class="required-msg" rows="4" 
+						style="width: 100%; border: 1px solid #000; padding: 12px; font-family: inherit;"
+						placeholder="Justifique su respuesta sobre la actitud y motivación observada en el individuo"></textarea>
+				</div>
+			</div>
+			
+			
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+				<h3 style="margin-bottom:20px; color: #00447b; font-size: 1.1rem; font-weight: bold; line-height: 1.4;">
+					2.5 Teniendo en cuenta la selección de competencias efectuada en la sección anterior, ¿en qué áreas de experiencia, destinos o responsabilidades le recomendaría desarrollar su carrera al individuo? (incluyendo destinos de la estructura ajena a la Armada y en el extranjero)
+				</h3>
+				
+				<div class="justification-box">
+					<div class="justification-label" style="margin-bottom: 8px; font-weight: bold; color: #333;">
+						Explique en texto libre <span class="required-star" style="color: red;">*</span>
+					</div>
+					<textarea id="r_recomendacion_carrera_obs" class="required-msg" rows="6" 
+						style="width: 100%; border: 1px solid #000; padding: 15px; font-family: inherit; line-height: 1.5;"
+						placeholder="Explique las áreas, destinos o responsabilidades donde considere que el individuo haría un mejor trabajo o tendría un mejor desempeño"></textarea>
+				</div>
+			</div>
+			
+			</div>
+
+			<div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+			<button class="btn-mini" type="button" onclick="guardarEncuestaResponsable('responsable')" 
+					style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
+				Finalizar y Guardar Encuesta
+			</button>
+			</div>		
+			
+			
+		</section>
+      <!-- Evaluado -->
+      <section id="sec-evaluado" style="padding: 16px; display:none;">
+        <div style="margin-bottom:10px;" class="hint">Autoevaluación por competencia.</div>
+
+			<div style="margin-bottom: 25px;">
+				<h2 style="color: #00447b; border-bottom: 2px solid #00447b; padding-bottom: 8px; font-size: 1.4rem;">
+					Sección 3 – Expectativas y ambición del individuo
+				</h2>
+				<p style="font-size: 1rem; color: #333; line-height: 1.5; margin-top: 15px;">
+					En esta sección se consideran los planes, ambiciones y expectativas de carrera del individuo.
+				</p>
+				<p style="color: #d32f2f; font-weight: bold; margin-top: 10px;">
+					[Todos los campos de texto libre de esta sección son de obligatoria cumplimentación]
+				</p>
+			</div>
+		
+			<div style="margin-top: 30px; padding: 20px; border: 2px dashed #00447b; background: #f0f7ff; border-radius: 8px;">
+       
+				<div style="margin-top: 10px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+					<h3 style="margin-bottom:20px; color: #00447b; font-size: 1.1rem; font-weight: bold;">
+						3.1 En cuanto a su carrera profesional, ¿qué expectativas de futuro tiene a medio o largo plazo?
+					</h3>
+					<p style="font-style: italic; color: #666; margin-bottom: 20px;">(puede marcarse más de una opción)</p>
+
+					<div class="eval-options" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; gap: 8px; margin-bottom: 25px;">
+						
+						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
+							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Ascenso</span>
+							<input type="checkbox" name="e_expectativa" value="ascenso" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
+							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Mando</span>
+							<input type="checkbox" name="e_expectativa" value="mando" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
+							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Especialización</span>
+							<input type="checkbox" name="e_expectativa" value="especializacion" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
+							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Estabilidad Geográfica</span>
+							<input type="checkbox" name="e_expectativa" value="estabilidad" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
+							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Destinos en el Extranjero</span>
+							<input type="checkbox" name="e_expectativa" value="extranjero" style="transform: scale(1.3);">
+						</label>
+
+						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
+							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Otros</span>
+							<input type="checkbox" name="e_expectativa" value="otros" style="transform: scale(1.3);">
+						</label>
+
+					</div>
+			
+					<div class="justification-box" style="margin-top: 20px; border: 1px solid #000; padding: 15px;">
+						<p style="font-style: italic; font-size: 0.95rem; color: #333; margin-bottom: 15px; text-align: center;">
+							Para explicar sus expectativas y ambiciones, marque en las casillas superiores las áreas que va a priorizar en su trayectoria futura y explique sus expectativas y ambiciones en cada una de ellas.
+						</p>
+						<textarea id="e_expectativas_obs" rows="6" 
+							style="width: 100%; border: 1px solid #ccc; padding: 12px; font-family: inherit; box-sizing: border-box;" 
+							placeholder="Escriba aquí sus explicaciones..."></textarea>
+					</div>
+			
+			</div>
+
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+				<h3 style="margin-bottom:20px; color: #00447b; font-size: 1.1rem; font-weight: bold;">
+					3.2 En comparación con el personal de su mismo empleo, ¿cómo se considera profesionalmente?
+				</h3>
+				
+				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px;">
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOptEvaluado(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Por debajo de la media</span>
+						<input type="radio" name="e_comparacion" value="debajo" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOptEvaluado(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">En la media</span>
+						<input type="radio" name="e_comparacion" value="media" style="transform: scale(1.3);">
+					</label>
+
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOptEvaluado(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Por encima de la media</span>
+						<input type="radio" name="e_comparacion" value="encima" style="transform: scale(1.3);">
+					</label>
+					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOptEvaluado(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Excepcional</span>
+						<input type="radio" name="e_comparacion" value="excepcional" style="transform: scale(1.3);">
+					</label>
+				</div>
+			</div>
+
+
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+					<h3 style="margin-bottom:12px; color: #00447b;">
+					3.3 ¿Qué competencias considera que son sus fortalezas?, y justifíquelas con ejemplos concretos:
+					</h3>
+
+				<p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+					Haga clic en el botón inferior para añadir una nueva competencia de fortaleza.
+				</p>
+
+				<div id="contenedor-fortalezas-evaluado" style="margin-bottom: 15px;"></div>
+
+				<button type="button" 
+						id="btn-agregar-fortaleza"
+						class="btn-mini" 
+						onclick="agregarFortalezaEvaluado()" 
+						style="cursor:pointer; background-color: #00447b; color: white; padding: 10px 15px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 1.5rem; line-height: 0;">+</span> Añadir competencia
+				</button>
+
+			</div>
+
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+				<h3 style="margin-bottom:12px; color: #00447b; font-size: 1.1rem; font-weight: bold;">
+					3.4 ¿En qué competencias le gustaría mejorar en el medio plazo?, y justifíquelas con ejemplos concretos:
+				</h3>
+				
+				<div id="contenedor-debilidades-evaluado"></div>
+				
+				<button type="button" 
+						id="btn-agregar-debilidad"
+						class="btn-mini" 
+						onclick="agregarDebilidadEvaluado()" 
+						style="cursor:pointer; background-color: #00447b; color: white; padding: 10px 15px; border-radius: 4px; display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 1.5rem; line-height: 0;">+</span> Añadir competencia
+				</button>
+			</div>
+
+			
+			<div style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #fff; border-radius: 8px;">
+				<h3 style="margin-bottom:12px; color: #00447b; font-size: 1.1rem; font-weight: bold;">
+					3.5 ¿Desea añadir alguna observación adicional sobre su desempeño, aspiraciones o necesidades de apoyo?
+				</h3>
+				
+				<div class="justification-box">
+					<textarea id="e_comentarios_finales" rows="4" 
+						style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; box-sizing: border-box; display: block; background-color: #fcfcfc;"
+						placeholder="Escriba aquí cualquier otra información que considere relevante para su evaluación..."></textarea>
+				</div>
+			</div>
+
+			<div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px;">
+				<div style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
+					<button type="button" onclick="guardarEncuestaEvaluado('evaluado')" 
+						style="background-color: #00447b; color: white; padding: 15px 40px; font-size: 1.0rem; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+						GUARDAR ENCUESTA
+					</button>
+					
+					<button type="button" onclick="limpiarFormulario('evaluado')" 
+						style="background-color: #00447b; color: white; padding: 15px 40px; font-size: 1.0rem; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+						LIMPIAR
+					</button>
+				</div>
+			</div>
+
+
+      <!-- Ayuda -->
+      <section id="sec-ayuda" style="padding: 16px; display:none;">
+        <ul style="margin:0; padding-left: 18px;">
+          <li><b>Export JSON</b>: descarga un fichero con las respuestas guardadas.</li>
+          <li><b>Import JSON</b>: carga un fichero exportado anteriormente.</li>
+          <li><b>Reset</b>: borra respuestas y reinicia la app.</li>
+        </ul>
+      </section>
+
+      <div class="card-footer">
+        <div class="hint">Los datos se guardan en el navegador (localStorage).</div>
+      </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  
+	  <div id="customAlert" style="display:none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+		<div style="background-color: #fff; border: 2px solid #00447b; border-radius: 8px; width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); overflow: hidden; animation: fadeIn 0.3s;">
+			<div style="background-color: #00447b; color: white; padding: 12px 16px; font-weight: bold; display: flex; align-items: center; gap: 10px;">
+				<span style="font-size: 1.2rem;"></span> 
+				<span id="alertTitle">Notificación</span>
+			</div>
+			<div id="alertMessage" style="padding: 20px; color: #333; line-height: 1.5; font-size: 0.95rem; text-align: center;">
+				Mensaje de prueba.
+			</div>
+			<div style="padding: 15px; border-top: 1px solid #eee; text-align: center; background-color: #f9f9f9;">
+				<button onclick="closeAlert()" style="background-color: #00447b; color: white; border: none; padding: 8px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s;">
+					Aceptar
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<style>
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(-20px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+</style>
+  
+  
+</body>
+</html>

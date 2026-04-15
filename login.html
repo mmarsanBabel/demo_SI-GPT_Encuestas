@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encuesta de Competencias - Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <div class="logo-container"><img src="assets/logo1.png" class="header-logo" onerror="this.style.display='none'"></div>
+    <div class="header-title-center">SISTEMA DE GESTIÓN DE PUESTOS DE TRABAJO</div>
+    <div class="logo-container logo-right"><img src="assets/logo2.png" class="header-logo" onerror="this.style.display='none'"></div>
+  </div>
+</header>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Acceso Usuarios</h2>
+
+    <div id="errorBox" class="error-alert">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>Credenciales no válidas.</span>
+    </div>
+
+    <form onsubmit="handleLogin(event)">
+      <div class="field-group">
+        <label>Identificación de Usuario</label>
+        <div class="input-with-icon">
+          <i class="fas fa-user"></i>
+          <input type="text" id="userInput" placeholder="Nombre de usuario" required autocomplete="username">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Contraseña</label>
+        <div class="input-with-icon">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="passInput" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login">
+        <i class="fas fa-sign-in-alt"></i>
+        Entrar al sistema
+      </button>
+    </form>
+
+    <div style="margin-top:14px; font-size:12px; color:#666; line-height:1.4">
+      <b>Demo:</b> admin / 1234 &nbsp;|&nbsp; gestor / armada2026
+    </div>
+  </div>
+</div>
+
+<!-- 👇 SIN MODULE -->
+<script src="usuarios.js"></script>
+
+<script>
+function handleLogin(event){
+  event.preventDefault();
+
+  const userValue = document.getElementById('userInput').value.trim();
+  const passValue = document.getElementById('passInput').value;
+  const errorBox = document.getElementById('errorBox');
+
+  if(typeof validarCredenciales !== "function"){
+    errorBox.style.display="block";
+    errorBox.innerHTML="No se encuentra usuarios.js";
+    return;
+  }
+
+  const auth = validarCredenciales(userValue, passValue);
+
+  if(auth){
+    try{
+      sessionStorage.setItem('usuarioNombre', auth.nombre);
+      sessionStorage.setItem('usuarioPerfil', auth.perfil);
+    
+      // Persistencia (localStorage)
+      try{
+        localStorage.setItem('usuarioNombre', auth.nombre);
+        localStorage.setItem('usuarioPerfil', auth.perfil);
+      }catch(e){}
+}catch(e){}
+
+    window.location.href = "encuesta_competencias.html";
+  }else{
+    errorBox.style.display="block";
+    document.getElementById('passInput').value="";
+  }
+}
+</script>
+</body>
+</html>
