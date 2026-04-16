@@ -186,13 +186,6 @@
 
 			<div id="resp-tab-competencias" class="tab-panel" style="display:none;">
 			
-			<div style="margin-top: 30px; display: flex; justify-content: flex-end;">
-				<button class="btn-mini" type="button" onclick="guardarEncuestaResponsable('responsable')" 
-						style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
-					Finalizar y Guardar Encuesta
-				</button>
-			</div>
-			
 				<div style="margin-bottom: 25px;">
 					<h2 style="color: #00447b; border-bottom: 2px solid #00447b; padding-bottom: 8px; font-size: 1.4rem;">
 						Sección 1 – Análisis de competencias
@@ -206,156 +199,146 @@
 				</div>
 				
 			<div style="margin-top: 30px; padding: 20px; border: 2px dashed #00447b; background: #f0f7ff; border-radius: 8px;">
-			<h3 style="margin-bottom:12px; color: #00447b;">1.1 Valore el desarrollo del individuo en cada una de las cuatro áreas de impacto del Modelo de Competencias, justificando su respuesta cuando se requiera:
-			</h3>
-				
-			<div class="eval-block" style="margin-top: 25px;">
-				<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-					Actuación con valores
-				</div>
-				
-				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
-					
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
-						<input type="radio" name="r_valores" value="1" style="transform: scale(1.3);">
-					</label>
+				<h3 style="margin-bottom:12px; color: #00447b;">
+					1.1 Valore el desarrollo del individuo en cada una de las cuatro áreas de impacto del Modelo de Competencias, justificando su respuesta cuando se requiera:
+				</h3>
 
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
-						<input type="radio" name="r_valores" value="2" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
-						<input type="radio" name="r_valores" value="3" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
-						<input type="radio" name="r_valores" value="4" style="transform: scale(1.3);">
-					</label>
-				</div>
-				
-					<div class="justification-box">
+				<div class="eval-block" style="margin-top: 25px;">
+					<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+						Actuación con valores
+					</div>
+					<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+							<input type="radio" name="r_valores" value="1" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Adecuado</span>
+							<input type="radio" name="r_valores" value="2" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+							<input type="radio" name="r_valores" value="3" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+							<input type="radio" name="r_valores" value="4" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+							<input type="radio" name="r_valores" value="5" style="transform: scale(1.3);">
+						</label>
+					</div>
+					<div class="justification-box" style="margin-top: 15px;">
 						<div class="justification-label">
 							Justifique su respuesta <span class="required-star">*</span>
 						</div>
-						<textarea id="r_valores_obs" class="required-msg" rows="3" 
-							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
+						<textarea id="r_valores_obs" class="required-msg" rows="3" placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
 					</div>
 				</div>
 
-				
 				<div class="eval-block" style="margin-top: 25px;">
 					<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
 						Liderazgo y mando
 					</div>
-					
-				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
-					
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
-						<input type="radio" name="r_liderazgo" value="1" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
-						<input type="radio" name="r_liderazgo" value="2" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
-						<input type="radio" name="r_liderazgo" value="3" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
-						<input type="radio" name="r_liderazgo" value="4" style="transform: scale(1.3);">
-					</label>
-				</div>
-
+					<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+							<input type="radio" name="r_liderazgo" value="1" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Adecuado</span>
+							<input type="radio" name="r_liderazgo" value="2" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+							<input type="radio" name="r_liderazgo" value="3" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+							<input type="radio" name="r_liderazgo" value="4" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+							<input type="radio" name="r_liderazgo" value="5" style="transform: scale(1.3);">
+						</label>
+					</div>
 					<div class="justification-box" style="margin-top: 15px;">
 						<div class="justification-label">
 							Justifique su respuesta <span class="required-star">*</span>
 						</div>
-						<textarea id="r_liderazgo_obs" class="required-msg" rows="3" 
-							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
+						<textarea id="r_liderazgo_obs" class="required-msg" rows="3" placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
 					</div>
 				</div>
-				
+
 				<div class="eval-block" style="margin-top: 25px;">
 					<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
 						Capacidades de análisis y gestión
 					</div>
-					
-				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
-					
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
-						<input type="radio" name="r_analisis" value="1" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
-						<input type="radio" name="r_analisis" value="2" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
-						<input type="radio" name="r_analisis" value="3" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
-						<input type="radio" name="r_analisis" value="4" style="transform: scale(1.3);">
-					</label>
-				</div>
+					<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
+							<input type="radio" name="r_analisis" value="1" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Adecuado</span>
+							<input type="radio" name="r_analisis" value="2" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+							<input type="radio" name="r_analisis" value="3" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+							<input type="radio" name="r_analisis" value="4" style="transform: scale(1.3);">
+						</label>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
+							<input type="radio" name="r_analisis" value="5" style="transform: scale(1.3);">
+						</label>
+					</div>
 					<div class="justification-box" style="margin-top: 15px;">
 						<div class="justification-label">
 							Justifique su respuesta <span class="required-star">*</span>
 						</div>
-						<textarea id="r_analisis_obs" class="required-msg" rows="3" 
-							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
+						<textarea id="r_analisis_obs" class="required-msg" rows="3" placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I) y la Guía para Elaboración del Informe (Anexo II)"></textarea>
 					</div>
 				</div>
-				
+
 				<div class="eval-block" style="margin-top: 25px;">
 					<div class="eval-title" style="font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
 						Capacidades técnicas
 					</div>
-					
 					<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
-						
 						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
 							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Requiere desarrollo</span>
 							<input type="radio" name="r_tecnicas" value="1" style="transform: scale(1.3);">
 						</label>
-
 						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Adecuado</span>
 							<input type="radio" name="r_tecnicas" value="2" style="transform: scale(1.3);">
 						</label>
-
-						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
-							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
 							<input type="radio" name="r_tecnicas" value="3" style="transform: scale(1.3);">
 						</label>
-
+						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
+							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
+							<input type="radio" name="r_tecnicas" value="4" style="transform: scale(1.3);">
+						</label>
 						<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px; transition: all 0.2s;" onclick="selectOpt(this)">
 							<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
-							<input type="radio" name="r_tecnicas" value="4" style="transform: scale(1.3);">
+							<input type="radio" name="r_tecnicas" value="5" style="transform: scale(1.3);">
 						</label>
 					</div>
 					<div class="justification-box" style="margin-top: 15px;">
 						<div class="justification-label">
 							Justifique su respuesta <span class="required-star">*</span>
 						</div>
-						<textarea id="r_tecnicas_obs" class="required-msg" rows="4" 
-							placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I), la Guía para Elaboración del Informe (Anexo II) y la Guía específica sobre el Área de Impacto de Capacidades Técnicas (Anexo III). En esta última, se detallan las habilidades técnicas que integran la competencia “Saber Experto”, referencia para la argumentación"></textarea>
+						<textarea id="r_tecnicas_obs" class="required-msg" rows="4" placeholder="Justifique su respuesta usando ejemplos y fundamentándola en el Modelo de Competencias (Anexo I), la Guía para Elaboración del Informe (Anexo II) y la Guía específica sobre el Área de Impacto de Capacidades Técnicas (Anexo III). En esta última, se detallan las habilidades técnicas que integran la competencia “Saber Experto”, referencia para la argumentación"></textarea>
 					</div>
 				</div>
-</div>
+			</div>
 
 			<div style="margin-top: 30px; padding: 20px; border: 2px dashed #00447b; background: #f0f7ff; border-radius: 8px;">
 					<h3 style="margin-bottom:12px; color: #00447b;">1.2 De acuerdo con el Modelo de Competencias de la Armada, si lo considera, seleccione las competencias donde el individuo demuestra una fortaleza clara vs sus pares, y justifíquelas con ejemplos concretos:
@@ -426,13 +409,6 @@
 			<!-- TAB 3: Trayectoria profesional potencial -->			
 
 			<div id="resp-tab-trayectoria" class="tab-panel" style="display:none;">
-
-			<div style="margin-top: 30px; display: flex; justify-content: flex-end;">
-				<button class="btn-mini" type="button" onclick="guardarEncuestaResponsable('responsable')" 
-						style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
-					Finalizar y Guardar Encuesta
-				</button>
-			</div>
     
 				<div style="margin-bottom: 25px;">
 					<h2 style="color: #00447b; border-bottom: 2px solid #00447b; padding-bottom: 8px; font-size: 1.4rem;">
@@ -512,14 +488,14 @@
 						<input type="radio" name="r_potencial_empleo" value="2" style="transform: scale(1.3);">
 					</label>
 
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px;" onclick="selectOpt(this)">
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #fbc02d; padding: 10px; cursor: pointer; background-color: #fffde7; border-radius: 4px;" onclick="selectOpt(this)">
 						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
 						<input type="radio" name="r_potencial_empleo" value="3" style="transform: scale(1.3);">
 					</label>
 
 					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px;" onclick="selectOpt(this)">
 						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy sólido</span>
-						<input type="radio" name="r_potencial_empleo" value="4" style="transform: scale(1.3);">
+						<input type="radio" name="r_potencial_empleo" value="4" style="transform: scale(1.3);"> 
 					</label>
 
 					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOpt(this)">
@@ -556,7 +532,7 @@
 						<input type="radio" name="r_potencial_especial" value="2" style="transform: scale(1.3);">
 					</label>
 
-					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #afb42b; padding: 10px; cursor: pointer; background-color: #f9fbe7; border-radius: 4px;" onclick="selectOpt(this)">
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #fbc02d; padding: 10px; cursor: pointer; background-color: #fffde7; border-radius: 4px;" onclick="selectOpt(this)">
 						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sólido</span>
 						<input type="radio" name="r_potencial_especial" value="3" style="transform: scale(1.3);">
 					</label>
@@ -595,14 +571,14 @@
 						<input type="radio" name="r_motivacion_progreso" value="1" style="transform: scale(1.3);">
 					</label>
 
+					<label class="opt-item" style="width: 150px; text-align: center; border: 2px solid #fbc02d; padding: 10px; cursor: pointer; background-color: #fffde7; border-radius: 4px;" onclick="selectOpt(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Parcialmente</span>
+						<input type="radio" name="r_motivacion_progreso" value="3" style="transform: scale(1.3);">
+					</label>
+
 					<label class="opt-item" style="width: 150px; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px;" onclick="selectOpt(this)">
 						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Sí</span>
 						<input type="radio" name="r_motivacion_progreso" value="2" style="transform: scale(1.3);">
-					</label>
-
-					<label class="opt-item" style="width: 150px; text-align: center; border: 2px solid #fbc02d; padding: 10px; cursor: pointer; background-color: #fffde7; border-radius: 4px;" onclick="selectOpt(this)">
-						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">No estoy seguro</span>
-						<input type="radio" name="r_motivacion_progreso" value="3" style="transform: scale(1.3);">
 					</label>
 				</div>
 
@@ -639,9 +615,12 @@
 					style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
 				Finalizar y Guardar Encuesta
 			</button>
-			</div>		
-			
-			
+			</div>
+
+		</div>
+
+	  </div>
+
 		</section>
 
       <!-- Colaboradores -->
@@ -749,13 +728,6 @@
           </div>
 
           <div id="colab-tab-encuesta" class="tab-panel" style="display:none;">
-            <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
-              <button class="btn-mini" type="button" onclick="guardarEncuestaColaborador('colaboradores')" 
-                      style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
-                Finalizar y Guardar Encuesta
-              </button>
-            </div>
-
             <div style="margin-bottom: 25px;">
               <h2 style="color: #00447b; border-bottom: 2px solid #00447b; padding-bottom: 8px; font-size: 1.4rem;">
                 Sección 1 – Encuesta de colaboradores
@@ -814,20 +786,24 @@
               </p>
               <div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
                 <label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #d32f2f; padding: 10px; cursor: pointer; background-color: #ffebee; border-radius: 4px;" onclick="selectOpt(this)">
-                  <span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Por debajo de la media</span>
+                  <span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Muy por debajo de la media</span>
                   <input type="radio" name="colab_potencial_superior" value="1" style="transform: scale(1.3);">
                 </label>
                 <label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #ef6c00; padding: 10px; cursor: pointer; background-color: #fff3e0; border-radius: 4px;" onclick="selectOpt(this)">
-                  <span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">En la media</span>
+                  <span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Por debajo de la media</span>
                   <input type="radio" name="colab_potencial_superior" value="2" style="transform: scale(1.3);">
+                </label>
+                <label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #fbc02d; padding: 10px; cursor: pointer; background-color: #fffde7; border-radius: 4px;" onclick="selectOpt(this)">
+                  <span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">En la media</span>
+                  <input type="radio" name="colab_potencial_superior" value="3" style="transform: scale(1.3);">
                 </label>
                 <label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #2e7d32; padding: 10px; cursor: pointer; background-color: #e8f5e9; border-radius: 4px;" onclick="selectOpt(this)">
                   <span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Por encima de la media</span>
-                  <input type="radio" name="colab_potencial_superior" value="3" style="transform: scale(1.3);">
+                  <input type="radio" name="colab_potencial_superior" value="4" style="transform: scale(1.3);">
                 </label>
                 <label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOpt(this)">
                   <span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500;">Excepcional</span>
-                  <input type="radio" name="colab_potencial_superior" value="4" style="transform: scale(1.3);">
+                  <input type="radio" name="colab_potencial_superior" value="5" style="transform: scale(1.3);">
                 </label>
               </div>
             </div>
@@ -947,11 +923,6 @@
 						</label>
 
 						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
-							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Destinos en el Extranjero</span>
-							<input type="checkbox" name="e_expectativa" value="extranjero" style="transform: scale(1.3);">
-						</label>
-
-						<label class="opt-item" style="width: 122px; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="toggleMultiSelect(event, this)">
 							<span style="display: block; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Otros</span>
 							<input type="checkbox" name="e_expectativa" value="otros" style="transform: scale(1.3);">
 						</label>
@@ -976,6 +947,11 @@
 				
 				<div class="eval-options" style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px;">
 					
+					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOptEvaluado(this)">
+						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Muy por debajo de la media</span>
+						<input type="radio" name="e_comparacion" value="muy_debajo" style="transform: scale(1.3);">
+					</label>
+
 					<label class="opt-item" style="flex: 1; text-align: center; border: 2px solid #00447b; padding: 10px; cursor: pointer; background-color: #f0f7ff; border-radius: 4px;" onclick="selectOptEvaluado(this)">
 						<span style="display: block; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; pointer-events: none;">Por debajo de la media</span>
 						<input type="radio" name="e_comparacion" value="debajo" style="transform: scale(1.3);">
@@ -1049,22 +1025,15 @@
 				</div>
 			</div>
 
-			<div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px;">
-				<div style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
-					<button type="button" onclick="guardarEncuestaEvaluado('evaluado')" 
-						style="background-color: #00447b; color: white; padding: 15px 40px; font-size: 1.0rem; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-						GUARDAR ENCUESTA
-					</button>
-					
-					<button type="button" onclick="limpiarFormulario('evaluado')" 
-						style="background-color: #00447b; color: white; padding: 15px 40px; font-size: 1.0rem; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-						LIMPIAR
-					</button>
-				</div>
-			</div>
+		</div>
 
+		<div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+			<button class="btn-mini" type="button" onclick="guardarEncuestaEvaluado('evaluado')" 
+				style="background-color: #00447b; color: white; padding: 14px 28px; font-weight: bold; font-size: 1.1rem; border: none; border-radius: 4px; cursor: pointer;">
+				Finalizar y Guardar Encuesta
+			</button>
+		</div>
 
-      <!-- Ayuda -->
       <section id="sec-ayuda" style="padding: 16px; display:none;">
         <ul style="margin:0; padding-left: 18px;">
           <li><b>Export JSON</b>: descarga un fichero con las respuestas guardadas.</li>
